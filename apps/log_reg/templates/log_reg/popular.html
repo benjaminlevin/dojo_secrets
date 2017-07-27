@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Dojo Secrets</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'log_reg/css/style.css' %}">
+    </head>
+    <body>
+        <a href='/logout'>Logout</a>
+        <a href='/secrets'>Back</a>
+        {% for message in messages %}
+            <h3>{{ message }}</h3>
+        {% endfor %}
+        <h2>Most Popular Secrets...</h2>
+        {% for secret in secret %}
+        <ul>
+            <ol>{{ secret.secret }}</ol>
+            <ol>{{ secret.user.first_name }}</ol>
+            <ol>({{ secret.created_at|date }} @ {{ secret.created_at|time }})</ol>
+            <ol>{{ secret.num_likes }} total likes</ol>
+            {% if current_user not in secret.like.all %}                         
+                <form action='/like' method='post'>
+                    {% csrf_token %}
+                    <input type='hidden' name='sid' value='{{secret.id}}'>
+                    <input type='hidden' name='uid' value='{{current_user.id}}'>
+                    <ol><input type='submit' value='Like'></ol>
+            {% else %}  
+                    <ol>liked!</ol>
+                </form>
+            {% endif %}            
+            {% if secret.user.id == request.session.id %}
+                <form action='/delete' method='post'>
+                    {% csrf_token %}
+                    <input type='hidden' name='sid' value='{{secret.id}}'>
+                    <ol><input type='submit' value='Delete'></ol>
+                </form>
+            {% endif %}
+        </ul>
+        {% endfor %}   
+    </body>
+</html>
