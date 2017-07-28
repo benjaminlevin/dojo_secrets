@@ -15,9 +15,8 @@
         {% for secret in secret %}
         <ul>
             <ol>{{ secret.secret }}</ol>
-            <ol>{{ secret.user.first_name }}</ol>
             <ol>({{ secret.created_at|date }} @ {{ secret.created_at|time }})</ol>
-            <ol>{{ secret.num_likes }} total likes</ol>
+            <ol>{{ secret.num_likes }} likes</ol>
             {% if current_user not in secret.like.all %}                         
                 <form action='/like' method='post'>
                     {% csrf_token %}

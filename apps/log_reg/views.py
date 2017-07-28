@@ -2,10 +2,10 @@ from __future__ import unicode_literals
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
 from .models import User, Secret, function
-from django.core.urlresolvers import reverse
 from django.db.models import Count
 
 def index(request):
+    #context only for reviewing all registered users
     context = {
         "user" : User.objects.all()
     }
@@ -13,10 +13,18 @@ def index(request):
 
 def register(request):
     if request.method == 'POST':
-        if User.objects.validate(request) is True:
+        user = User.objects.validate(request)
+        print 'check this yooooo'
+        print user[0]
+        if user[0] is False:
+            print 'no go'
             return redirect('/')
         else:
-            return redirect('/')
+            print user[1].id
+            request.session['id'] = user[1].id
+            request.session['name'] = user[1].first_name            
+            return redirect('/secrets')
+    print user[1].last_name
     return redirect("/")
 
 def login(request):
@@ -33,7 +41,7 @@ def login(request):
         return redirect('/')
 
 def secrets(request):
-    if request.session['name'] != None:
+    if request.session['id'] != None:
         context = {
             "user" : User.objects.filter(id=request.session['id']),
             "secret" : Secret.objects.annotate(num_likes=Count('like')).order_by('-created_at')[:5],
@@ -54,7 +62,6 @@ def popular(request):
     else:
         return redirect('/')      
 
-
 def post(request):
     if request.method == "POST":
         Secret.objects.addSecret(request, request.session['id'])
@@ -70,15 +77,15 @@ def delete(request):
     secret.delete()
     return redirect('/secrets')
 
-#Function to be deleted
-def deletea(request):
-    secret = Secret.objects.all()
-    user = User.objects.all()
-    secret.delete()
-    user.delete()
-    return redirect('/secrets')
-
 def logout(request):
     request.session['id'] = None
     request.session['name'] = None
+    return redirect('/')
+
+#for clearing entire DB
+def deletea(request):
+    secret = Secret.objects.all()
+    user = User.objects.all()
+    secret.delete()        
+    user.delete()
     return redirect('/')

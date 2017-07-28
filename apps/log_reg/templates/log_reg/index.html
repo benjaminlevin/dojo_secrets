@@ -9,7 +9,7 @@
         <h1>Register</h1>
         {% for message in messages %}
             <ul>
-                <li class='error'>{{ message }}</li>
+                <li>{{ message }}</li>
             </ul>
         {% endfor %}
         <form action='/register' method='POST'>
@@ -28,14 +28,14 @@
             Password: <input type="password" name="password">
             <input type="submit" value="Login">
         </form>
-        {% for user in user %}
+        <!-- {% for user in user %}
         <ul>
             <ol class='error'>{{ user.first_name }}</ol>
             <ol class='error'>{{ user.last_name }}</ol>                             
             <ol class='error'>{{ user.email }}</ol>
             <ol class='error'>{{ user.password }}</ol>            
         </ul>
-        {% endfor %}  
-        <a href='/deletea'>delete all secrets</a>                  
+        {% endfor %}   -->
+         <!-- <a href='/deletea'>delete all secrets and users</a>                    -->
     </body>
 </html>

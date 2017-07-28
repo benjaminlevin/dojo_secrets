@@ -46,7 +46,7 @@ class UserManager(models.Manager):
                 email = post_data['email'],
                 password = hashed
             )
-        return data_is_good
+        return data_is_good, user
 
     def login(self, request):
         post_data = request.POST
@@ -74,7 +74,6 @@ class User(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = UserManager()
-
 
 class SecretManager(models.Manager):
     def addSecret(self, request, user_id):
